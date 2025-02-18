@@ -4,72 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use GuzzleHttp\Client;
+use App\Services\Contacts;
 use Exception;
 
 class Contact extends Model
 {
-    private $client;
-    private $config;
-    private $client_id;
-    private $client_secret;
+    protected $casts = [
+        'customFields' => 'array',
+        'tags' => 'array',
+        'additionalEmails' => 'array',
+        'additionalPhones' => 'array',
+        'followers' => 'array',
+    ];
 
-    public function __construct()
+    public function getFullNameAttribute()
     {
-        //Get Config
-        $this->config = Config::where('id',1)->first();
-
-        //Client and Client Secret
-        $this->client_id = env('GHL_CLIENT_ID');
-        $this->client_secret = env('GHL_CLIENT_SECRET');
-
-        $this->client = new Client([
-            'base_uri' => 'https://services.leadconnectorhq.com',
-        ]);
+        return ucwords($this->firstNameLowerCase) . ' ' . ucwords($this->lastNameLowerCase);
     }
 
-    public function getContacts($name, $page)
+    public function getdateOfBirthAttribute()
     {
-        $filters = [
-            [
-                'group' => 'OR',
-                'filters' => [
-                    [
-                        'field' => 'tags',
-                        'operator' => 'eq',
-                        'value' => ['wowfriday_plan mensual'],
-                    ],
-                    [
-                        'field' => 'tags',
-                        'operator' => 'eq',
-                        'value' => ['wowfriday_plan anual'],
-                    ],
-                ],
-            ],
-        ];
-
-        $data = [
-            'locationId' => $this->config->location_id,
-            'page' => intval($page),
-            'pageLimit' => 20,
-            'filters' => $filters,
-        ];
-
-        try {
-            $response = $this->client->post('contacts/search', [
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Version' => '2021-07-28',
-                    'Authorization' => 'Bearer ' . $this->config->access_token,
-                ],
-                'json' => $data,
-            ]);
-
-            return json_decode($response->getBody(), true);
-        } catch (Exception $e) {
-            if ($e->getCode() == 401) {
-                return response()->json(['error' => 'Unauthorized request'], 401);
-            }
-            return response()->json(['error' => 'Request failed'], 500);
-        }
+        return Carbon::parse($this->attributes['dateOfBirth'])->format('Y-m-d');
     }
 }

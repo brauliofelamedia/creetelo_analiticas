@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('configs', function (Blueprint $table) {
             $table->id();
             $table->string('logo')->default('default.png')->nullable();
-            $table->string('color_primary')->default('#000000')->nullable();
-            $table->string('color_secundary')->default('#000000')->nullable();
             $table->text('code')->nullable();
 
             //Extra token
@@ -23,7 +21,6 @@ return new class extends Migration
             $table->text('location_id')->nullable();
             $table->text('refresh_token')->nullable();
             $table->text('access_token')->nullable();
-            $table->string('base_url')->nullable();
             $table->timestamps();
         });
     }

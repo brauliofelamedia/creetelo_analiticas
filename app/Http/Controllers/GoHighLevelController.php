@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\GoHighLevel;
+use App\Models\GoHighLevel as ModelGoHighLevel;
 use Illuminate\Http\Request;
 use App\Models\Config;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
+use App\Services\GoHighLevel;
 
 class GoHighLevelController extends Controller
 {
@@ -30,13 +31,21 @@ class GoHighLevelController extends Controller
         return $goHighLevel->getToken();
     }
 
+    public function renewToken()
+    {
+        $goHighLevel = new GoHighLevel();
+        return $goHighLevel->renewToken();
+    }
+
     public function authorization(Request $request)
     {
         $this->config->code = $request->code;
         $this->config->save();
 
         try {
-            $response = Http::asForm()->post('https://services.leadconnectorhq.com/oauth/token', [
+            $response = Http::asForm()->withOptions([
+                'verify' => false,
+            ])->post('https://services.leadconnectorhq.com/oauth/token', [
                 'client_id' => $this->client_id,
                 'client_secret' => $this->client_secret,
                 'grant_type' => 'authorization_code',
@@ -54,7 +63,7 @@ class GoHighLevelController extends Controller
             $this->config->location_id = $data['locationId'];
             $this->config->save();
 
-            return redirect()->route('finish');
+            return redirect()->route('filament.admin.pages.dashboard');
 
         } catch (\Throwable $exception) {
             return $exception->getMessage();
@@ -62,18 +71,18 @@ class GoHighLevelController extends Controller
         }
     }
 
-    public function finish()
-    {
-        /*$contactServices = new GoHighLevel();
-        $users = $contactServices->getContacts(null, null);*/
-        return 'Se termino la configuración';
-    }
-
     public function connect()
     {
         $client_id = $this->client_id;
+        $scopes = [
+            'contacts.readonly',
+            'opportunities.readonly',
+            'payments/transactions.readonly',
+            'payments/subscriptions.readonly',
+        ];
+
         if ($client_id) {
-            $url = "https://marketplace.leadconnectorhq.com/oauth/chooselocation?response_type=code&redirect_uri=" . $this->url . "&client_id=" . $client_id . "&scope=contacts.readonly&loginWindowOpenMode=self";
+            $url = "https://marketplace.leadconnectorhq.com/oauth/chooselocation?response_type=code&redirect_uri=" . $this->url . "&client_id=" . $client_id . "&scope=".implode(' ',$scopes)."&loginWindowOpenMode=self";
             return redirect()->away($url);
         } else {
             return 'No se ha asignado el client_id';

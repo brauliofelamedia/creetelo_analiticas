@@ -20,6 +20,11 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Visualbuilder\EmailTemplates\EmailTemplatesPlugin;
+use App\Filament\Widgets\ContactsPerMonthChart;
+use App\Filament\Widgets\ContactsAnualPerMonthChart;
+use App\Filament\Widgets\StatsOverview;
+use App\Filament\Widgets\SimpleChartWidget;
+use App\Filament\Widgets\TransactionsPerMonth;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -36,7 +41,7 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Amber,
             ])
             ->resources([
-                config('filament-logger.activity_resource')
+                //config('filament-logger.activity_resource')
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -45,11 +50,13 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                //Widgets\AccountWidget::class,
+                TransactionsPerMonth::class,
+                //StatsOverview::class,
+                //ContactsPerMonthChart::class,
+                //ContactsAnualPerMonthChart::class,
             ])
             ->middleware([
-                \Hasnayeen\Themes\Http\Middleware\SetTheme::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -59,10 +66,10 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                \Hasnayeen\Themes\Http\Middleware\SetTheme::class,
             ])
             ->plugins([
                 FilamentShieldPlugin::make(),
-                EmailTemplatesPlugin::make(),
                 \Hasnayeen\Themes\ThemesPlugin::make(),
                 BreezyCore::make()
                     ->enableTwoFactorAuthentication(

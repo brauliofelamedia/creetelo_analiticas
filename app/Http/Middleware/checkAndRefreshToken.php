@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Services;
+namespace App\Http\Middleware;
 
-use App\Models\User;
-use Illuminate\Support\Facades\Http;
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use App\Services\GoHighLevel;
 use App\Models\Config;
 use GuzzleHttp\Client;
-use Exception;
-class GoHighLevel
+
+class checkAndRefreshToken
 {
     private $client;
     private $config;
@@ -16,47 +18,30 @@ class GoHighLevel
 
     public function __construct()
     {
-        //Get Config
-        $this->config = Config::where('id',1)->first();
-
-        //Client and Client Secret
         $this->client_id = env('GHL_CLIENT_ID');
         $this->client_secret = env('GHL_CLIENT_SECRET');
 
+        $this->config = Config::where('id',1)->first();
         $this->client = new Client([
             'base_uri' => 'https://services.leadconnectorhq.com',
         ]);
     }
 
-    //Token, Refresh Toke and Access Token
-    public function checkToken()
+    public function handle(Request $request, Closure $next): Response
     {
-        try {
-            $response = $this->client->get('contacts', [
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Version' => '2021-07-28',
-                    'Authorization' => 'Bearer ' . $this->config->access_token,
-                ],
-                'query' => [
-                    'locationId' => $this->config->location_id
-                ]
-            ]);
+        // Fetch configuration data
+        $config = Config::where('id', 1)->firstOrFail();
+        $GoHighLevel = new GoHighLevel();
+        $token = $GoHighLevel->checkToken();
 
-            $response = response()->json($response->getBody());
-            $response->setStatusCode(200);
-            return $response;
-
-        } catch (Exception $e) {
-            if ($e->getCode() == 401) {
-                return response()->json(['error' => 'Unauthorized request'], 401);
-            }
-
-            return response()->json(['error' => 'Request failed'], 500);
+        if($token->getStatusCode() == 401){
+            $this->generateToken();
         }
+
+        return $next($request);
     }
 
-    public function renewToken()
+    private function generateToken()
     {
         try {
             $response = $this->client->post('https://services.leadconnectorhq.com/oauth/token', [
@@ -68,6 +53,7 @@ class GoHighLevel
                     'client_id' => $this->client_id,
                     'client_secret' => $this->client_secret,
                     'grant_type' => 'refresh_token',
+                    'code' => $this->config->code,
                     'refresh_token' => $this->config->refresh_token,
                 ],
             ]);
@@ -77,9 +63,11 @@ class GoHighLevel
 
             if ($statusCode === 200) {
                 $responseData = json_decode($responseBody, true);
-                $this->config->access_token = $responseData['access_token'];
-                $this->config->refresh_token = $responseData['refresh_token'];
-                $this->config->save();
+
+                $config = Config::where('id',1)->first();
+                $config->access_token = $responseData['access_token'];
+                $config->refresh_token = $responseData['refresh_token'];
+                $config->save();
 
             } else {
                 return response()->json(['error' => 'Token exchange failed'], $statusCode);
