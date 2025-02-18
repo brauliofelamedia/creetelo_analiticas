@@ -29,7 +29,9 @@ class ContactResource extends Resource
 {
     protected static ?string $model = Contact::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+
+    protected static ?string $navigationLabel = 'Contactos';
 
     public static function form(Form $form): Form
     {
@@ -152,12 +154,11 @@ class ContactResource extends Resource
                     })
             ], layout: FiltersLayout::AboveContent)
             ->headerActions([
-                Action::make('custom_action')
+                /*Action::make('custom_action')
                     ->label('Actualizar contactos')
                     ->color('primary')
                     ->icon('heroicon-o-arrow-path')
                     ->action(function () {
-
                         try {
                             // Lógica para actualizar contactos
                             $response = Http::withOptions(['verify' => false])->get(route('contact.insert'));
@@ -182,7 +183,7 @@ class ContactResource extends Resource
                                 ->danger()
                                 ->send();
                         }
-                    }),
+                    }),*/
             ])
             ->actions([
                 Action::make('view')

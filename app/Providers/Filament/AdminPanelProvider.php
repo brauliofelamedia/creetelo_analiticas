@@ -25,6 +25,7 @@ use App\Filament\Widgets\ContactsAnualPerMonthChart;
 use App\Filament\Widgets\StatsOverview;
 use App\Filament\Widgets\SimpleChartWidget;
 use App\Filament\Widgets\TransactionsPerMonth;
+use App\Filament\Widgets\TransactionsPerDay;
 use App\Filament\Widgets\MonthlyTransactionsTable;
 use App\Filament\Widgets\MonthlyEarningsOverview;
 
@@ -55,6 +56,7 @@ class AdminPanelProvider extends PanelProvider
                 //Widgets\AccountWidget::class,
                 StatsOverview::class,
                 TransactionsPerMonth::class,
+                TransactionsPerDay::class,
                 //MonthlyEarningsOverview::class,
                 //ContactsPerMonthChart::class,
                 //ContactsAnualPerMonthChart::class,

@@ -16,17 +16,17 @@ class StatsOverview extends BaseWidget
         $worstMonth = $this->getWorstMonth();
 
         return [
-            Stat::make('Ganancias año actual', '$'.number_format($this->getCurrentYearEarnings(),0).' USD')
+            Stat::make('Ganancias año actual', $this->formatAmount($this->getCurrentYearEarnings()))
                 ->description('Total año en curso')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('warning'),
 
-            Stat::make('Ganancias mes anterior', '$'.number_format($this->getLastMonthEarnings(),0).' USD')
+            Stat::make('Ganancias mes anterior', $this->formatAmount($this->getLastMonthEarnings()))
                 ->description('Total mes anterior')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('info'),
 
-            Stat::make('Ganancias mes actual', '$'.number_format($this->getCurrentMonthEarnings(),0).' USD')
+            Stat::make('Ganancias mes actual', $this->formatAmount($this->getCurrentMonthEarnings()))
                 ->description('Total mes en curso')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success'),
@@ -40,7 +40,19 @@ class StatsOverview extends BaseWidget
                 ->description('Mes con menores ingresos')
                 ->descriptionIcon('heroicon-m-arrow-trending-down')
                 ->color('danger'),
+            
+            Stat::make('Ganancias totales', '$'.number_format($this->getTotalEarnings(),0).' USD')
+                ->description('Ganancias acumuladas totales')
+                ->descriptionIcon('heroicon-m-arrow-trending-up')
+                ->color('primary'),
         ];
+    }
+    
+    private function getTotalEarnings()
+    {
+        return Transaction::query()
+            ->where('status', 'succeeded')
+            ->sum('amount');
     }
 
     private function getCurrentMonthEarnings()
@@ -109,7 +121,7 @@ class StatsOverview extends BaseWidget
 
     private function formatAmount($amount)
     {
-        return '$' . number_format($amount, 2);
+        return '$' . number_format($amount, 2).' USD';
     }
 
     protected $spanishMonths = [

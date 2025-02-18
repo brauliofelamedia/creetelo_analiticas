@@ -31,6 +31,6 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
     //Payments
     Route::prefix('transactions')->group(function () {
-        Route::get('insert',[TransactionController::class,'insert'])->name('transactions.insert');
+        Route::get('update',[TransactionController::class,'update'])->name('transactions.update');
     });
 });

@@ -9,7 +9,10 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Actions\Action;
 use Filament\Tables\Table;
+use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Http;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\DateColumn;
@@ -21,7 +24,9 @@ class TransactionResource extends Resource
 {
     protected static ?string $model = Transaction::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+
+    protected static ?string $navigationLabel = 'Transacciones'; 
 
     public static function form(Form $form): Form
     {
@@ -77,10 +82,54 @@ class TransactionResource extends Resource
             ]);
     }
 
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('actualizarRegistros')
+                ->label('Actualizar Registros')
+                ->color('primary')
+                ->icon('heroicon-o-arrow-path')
+                ->action(function () {
+                    try {
+                        // Mostrar notificación de proceso iniciado
+                        Notification::make()
+                            ->title('Actualización en proceso')
+                            ->body('La actualización de registros ha comenzado.')
+                            ->info()
+                            ->send();
+
+                        // Realizar la petición GET
+                        $response = Http::get('transactions.update');
+
+                        if ($response->successful()) {
+                            Notification::make()
+                                ->title('Actualización completada')
+                                ->body('Los registros se han actualizado correctamente.')
+                                ->success()
+                                ->send();
+                        } else {
+                            throw new \Exception('Error en la respuesta del servidor');
+                        }
+                    } catch (\Exception $e) {
+                        Notification::make()
+                            ->title('Error')
+                            ->body('Ha ocurrido un error durante la actualización: ' . $e->getMessage())
+                            ->danger()
+                            ->send();
+                    }
+                })
+        ];
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => Pages\ManageTransactions::route('/'),
         ];
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
     }
 }
