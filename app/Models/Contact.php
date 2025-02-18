@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use GuzzleHttp\Client;
 use App\Services\Contacts;
+
 use Exception;
 
 class Contact extends Model
@@ -25,5 +26,10 @@ class Contact extends Model
     public function getdateOfBirthAttribute()
     {
         return Carbon::parse($this->attributes['dateOfBirth'])->format('Y-m-d');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'contact_id', 'id');
     }
 }
