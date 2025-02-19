@@ -36,7 +36,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 });
 
 Route::get('/clear-optimize', function () {
-    if (auth()->check() && auth()->user()->hasRole('super_admin')) {
+    if (auth()->check()) {
         Artisan::call('optimize:clear');
         return 'Optimize cleared successfully!';
     } else {
