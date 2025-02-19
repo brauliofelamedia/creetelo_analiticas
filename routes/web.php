@@ -34,3 +34,12 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         Route::get('update',[TransactionController::class,'update'])->name('transactions.update');
     });
 });
+
+Route::get('/clear-optimize', function () {
+    if (auth()->check() && auth()->user()->hasRole('super_admin')) {
+        Artisan::call('optimize:clear');
+        return 'Optimize cleared successfully!';
+    } else {
+        return 'Unauthorized';
+    }
+})->middleware('auth');
