@@ -68,7 +68,6 @@ class TransactionResource extends Resource
                     ->label('Fecha de Creación')->sortable(),
             ])
             ->filters([
-                //
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -125,6 +124,8 @@ class TransactionResource extends Resource
     {
         return [
             'index' => Pages\ManageTransactions::route('/'),
+            'day' => Pages\FilterTransaction::route('/day'),
+            'month' => Pages\FilterMonth::route('/month'),
         ];
     }
 
@@ -133,3 +134,4 @@ class TransactionResource extends Resource
         return false;
     }
 }
+

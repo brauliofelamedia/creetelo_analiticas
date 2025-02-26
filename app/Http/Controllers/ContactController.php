@@ -16,7 +16,7 @@ class ContactController extends Controller
     {
         $contacts = new Contacts();
         $response = $contacts->contacts();
-
+        
         //Get total table
         $totalTable = Contact::count();
         

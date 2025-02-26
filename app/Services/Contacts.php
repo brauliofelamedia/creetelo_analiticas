@@ -37,12 +37,47 @@ class Contacts {
                     [
                         'field' => 'tags',
                         'operator' => 'eq',
+                        'value' => ['wowfriday_plan mensual'],
+                    ],
+                    [
+                        'field' => 'tags',
+                        'operator' => 'eq',
                         'value' => ['wowfriday_ plan anual'],
                     ],
                     [
                         'field' => 'tags',
                         'operator' => 'eq',
-                        'value' => ['wowfriday_plan mensual'],
+                        'value' => ['creetelo_mensual'],
+                    ],
+                    [
+                        'field' => 'tags',
+                        'operator' => 'eq',
+                        'value' => ['créetelo_mensual'],
+                    ],
+                    [
+                        'field' => 'tags',
+                        'operator' => 'eq',
+                        'value' => ['únete a créetelo2.0_mensual'],
+                    ],
+                    [
+                        'field' => 'tags',
+                        'operator' => 'eq',
+                        'value' => ['creetelo_anual'],
+                    ],
+                    [
+                        'field' => 'tags',
+                        'operator' => 'eq',
+                        'value' => ['créetelo_anual'],
+                    ],
+                    [
+                        'field' => 'tags',
+                        'operator' => 'eq',
+                        'value' => ['wowfriday_excreida anual'],
+                    ],
+                    [
+                        'field' => 'tags',
+                        'operator' => 'eq',
+                        'value' => ['únete a créetelo2.0_anual'],
                     ],
                 ],
             ],

@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Services\GoHighLevel;
 use App\Models\Config;
 use GuzzleHttp\Client;
+use Exception;
 
 class checkAndRefreshToken
 {

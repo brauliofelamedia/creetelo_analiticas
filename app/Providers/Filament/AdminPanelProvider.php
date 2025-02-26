@@ -20,14 +20,10 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Visualbuilder\EmailTemplates\EmailTemplatesPlugin;
-use App\Filament\Widgets\ContactsPerMonthChart;
-use App\Filament\Widgets\ContactsAnualPerMonthChart;
 use App\Filament\Widgets\StatsOverview;
-use App\Filament\Widgets\SimpleChartWidget;
 use App\Filament\Widgets\TransactionsPerMonth;
 use App\Filament\Widgets\TransactionsPerDay;
-use App\Filament\Widgets\MonthlyTransactionsTable;
-use App\Filament\Widgets\MonthlyEarningsOverview;
+use Filament\Navigation\NavigationItem;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -42,6 +38,23 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->colors([
                 'primary' => Color::Amber,
+            ])
+            ->navigationGroups([
+                'Shop',
+                'Blog',
+                'Transacciones',
+            ])
+            ->navigationItems([
+                NavigationItem::make('Transacciones por día')
+                    ->icon('heroicon-o-funnel')
+                    ->url('/admin/transactions/day')
+                    ->isActiveWhen(fn (): bool => request()->url() === url('/admin/transactions/day'))
+                    ->group('Transacciones'),
+                NavigationItem::make('Comparar 2 meses')
+                    ->icon('heroicon-o-adjustments-horizontal')
+                    ->url('/admin/transactions/month')
+                    ->isActiveWhen(fn (): bool => request()->url() === url('/admin/transactions/month'))
+                    ->group('Transacciones')
             ])
             ->resources([
                 //config('filament-logger.activity_resource')

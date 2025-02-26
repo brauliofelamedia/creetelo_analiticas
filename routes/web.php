@@ -6,6 +6,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\OpportunityController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TransactionController;
+use App\Livewire\TransactionsReport;
 
 Route::get('/', function () {
     return redirect()->route('filament.admin.auth.login');
