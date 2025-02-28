@@ -1,0 +1,42 @@
+.stat-value {
+    font-weight: 500;
+}
+
+.stat-value.active {
+    color: #059669;
+}
+
+.stat-value.canceled {
+    color: #DC2626;
+}
+
+.stat-value.past-due {
+    color: #D97706;
+}
+
+.stat-value.incomplete {
+    color: #4B5563;
+}
+
+.growth-indicator {
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-left: 0.25rem;
+}
+
+.growth-positive {
+    color: #10B981;
+}
+
+.growth-negative {
+    color: #EF4444;
+}
+
+.projection-row {
+    background-color: #EFF6FF;
+}
+
+.projection-text {
+    color: #2563EB;
+    font-weight: 500;
+}

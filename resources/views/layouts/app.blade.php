@@ -4,6 +4,7 @@
     <title></title>
     @livewireStyles
     @vite(['resources/css/app.css', 'resources/js/app.js']) {{-- Si usas Vite --}}
+    <link href="{{ asset('css/subscription-stats.css') }}" rel="stylesheet">
 </head>
 <body>
     <div class="filament-app-layout"> {{-- Contenedor principal de Filament --}}

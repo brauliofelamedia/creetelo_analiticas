@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\OpportunityController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TransactionController;
 use App\Livewire\TransactionsReport;
 
@@ -33,6 +34,11 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     //Payments
     Route::prefix('transactions')->group(function () {
         Route::get('update',[TransactionController::class,'update'])->name('transactions.update');
+    });
+
+    //Subscriptions
+    Route::prefix('subscriptions')->group(function () {
+        Route::get('get',[SubscriptionController::class,'get'])->name('subscriptions.update');
     });
 });
 

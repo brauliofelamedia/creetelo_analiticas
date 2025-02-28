@@ -45,16 +45,21 @@ class AdminPanelProvider extends PanelProvider
                 'Transacciones',
             ])
             ->navigationItems([
-                NavigationItem::make('Transacciones por día')
+                NavigationItem::make('Comparación por días')
                     ->icon('heroicon-o-funnel')
                     ->url('/admin/transactions/day')
                     ->isActiveWhen(fn (): bool => request()->url() === url('/admin/transactions/day'))
-                    ->group('Transacciones'),
-                NavigationItem::make('Comparar 2 meses')
+                    ->group('Estadísticas'),
+                NavigationItem::make('Comparación de meses')
                     ->icon('heroicon-o-adjustments-horizontal')
                     ->url('/admin/transactions/month')
                     ->isActiveWhen(fn (): bool => request()->url() === url('/admin/transactions/month'))
-                    ->group('Transacciones')
+                    ->group('Estadísticas'),
+                NavigationItem::make('Proyecciones')
+                    ->icon('heroicon-o-presentation-chart-line')
+                    ->url('/admin/subscriptions/projection')
+                    ->isActiveWhen(fn (): bool => request()->url() === url('/admin/subscriptions/projection'))
+                    ->group('Estadísticas')
             ])
             ->resources([
                 //config('filament-logger.activity_resource')
