@@ -111,6 +111,7 @@ class SubscriptionResource extends Resource
             'create' => Pages\CreateSubscription::route('/create'),
             'edit' => Pages\EditSubscription::route('/{record}/edit'),
             'projection' => Pages\SubscriptionProjection::route('/projection'),
+            'json' => Pages\json::route('/json'),
         ];
     }
 }

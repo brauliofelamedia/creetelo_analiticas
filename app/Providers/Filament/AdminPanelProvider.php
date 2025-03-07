@@ -59,7 +59,12 @@ class AdminPanelProvider extends PanelProvider
                     ->icon('heroicon-o-presentation-chart-line')
                     ->url('/admin/subscriptions/projection')
                     ->isActiveWhen(fn (): bool => request()->url() === url('/admin/subscriptions/projection'))
-                    ->group('Estadísticas')
+                    ->group('Estadísticas'),
+                NavigationItem::make('Consultas JSON')
+                    ->icon('heroicon-o-presentation-chart-line')
+                    ->url('/admin/subscriptions/json')
+                    ->isActiveWhen(fn (): bool => request()->url() === url('/admin/subscriptions/json'))
+                    ->group('Consultas JSON')
             ])
             ->resources([
                 //config('filament-logger.activity_resource')
