@@ -29,9 +29,20 @@ class Payments
         ]);
     }
 
-    public function Transactions($offset = 0)
+    public function Transactions($offset = 0, $contactId = null)
     {
         try {
+            $query = [
+                'altId' => $this->config->location_id,
+                'altType' => 'location',
+                'limit' => 100,
+                'offset' => $offset
+            ];
+
+            if ($contactId) {
+                $query['contactId'] = $contactId;
+            }
+
             // Realizar la solicitud GET
             $response = $this->client->get('payments/transactions', [
                 'headers' => [
@@ -39,13 +50,7 @@ class Payments
                     'Version' => '2021-07-28',
                     'Authorization' => 'Bearer ' . $this->config->access_token,
                 ],
-                'query' => [
-                    //'subscriptionId' => '4z3IHPMw9JB3Qkz8ttK8',
-                    'altId' => $this->config->location_id,
-                    'altType' => 'location',
-                    'limit' => 100,
-                    'offset' => $offset
-                ],
+                'query' => $query,
             ]);
 
             // Obtener el cuerpo de la respuesta y devolverlo como JSON

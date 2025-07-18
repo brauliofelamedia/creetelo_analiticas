@@ -43,9 +43,7 @@ class GoHighLevel
                 ]
             ]);
 
-            $response = response()->json($response->getBody());
-            $response->setStatusCode(200);
-            return $response;
+            return response()->json(['success' => true], 200);
 
         } catch (Exception $e) {
             if ($e->getCode() == 401) {
@@ -80,6 +78,8 @@ class GoHighLevel
                 $this->config->access_token = $responseData['access_token'];
                 $this->config->refresh_token = $responseData['refresh_token'];
                 $this->config->save();
+                
+                return response()->json(['success' => true], 200);
 
             } else {
                 return response()->json(['error' => 'Token exchange failed'], $statusCode);

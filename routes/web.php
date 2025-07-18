@@ -40,6 +40,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::prefix('subscriptions')->group(function () {
         Route::get('get',[SubscriptionController::class,'get'])->name('subscriptions.update');
     });
+
+    //API Test Route
+    Route::get('test/random-contact-data', [App\Http\Controllers\Api\ContactDataController::class, 'getRandomContactData'])->name('test.random-contact-data');
 });
 
 Route::get('/clear-optimize', function () {

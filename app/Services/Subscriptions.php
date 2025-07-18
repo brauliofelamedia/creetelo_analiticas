@@ -29,9 +29,21 @@ class Subscriptions
         ]);
     }
 
-    public function get($offset = 0)
+    public function get($offset = 0, $contactId = null)
     {
         try {
+            $query = [
+                'altId' => $this->config->location_id,
+                'altType' => 'location',
+                'limit' => 100,
+                'paymentMode' => 'live',
+                'offset' => $offset,
+            ];
+
+            if ($contactId) {
+                $query['contactId'] = $contactId;
+            }
+
             // Realizar la solicitud GET
             $response = $this->client->get('payments/subscriptions', [
                 'headers' => [
@@ -39,13 +51,7 @@ class Subscriptions
                     'Version' => '2021-07-28',
                     'Authorization' => 'Bearer ' . $this->config->access_token,
                 ],
-                'query' => [
-                    'altId' => $this->config->location_id,
-                    'altType' => 'location',
-                    'limit' => 100,
-                    'paymentMode' => 'live',
-                    'offset' => $offset,
-                ],
+                'query' => $query,
             ]);
 
             $data = json_decode($response->getBody(), true);

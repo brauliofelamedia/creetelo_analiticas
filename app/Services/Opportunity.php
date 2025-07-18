@@ -29,31 +29,35 @@ class Opportunity
         ]);
     }
 
-    public function Opportunities()
+    public function Opportunities($contactId = null)
     {
         try {
+            $query = [
+                'locationId' => $this->config->location_id,
+            ];
+
+            if ($contactId) {
+                $query['contactId'] = $contactId;
+            }
+
             $response = $this->client->get('opportunities/search', [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Version' => '2021-07-28',
                     'Authorization' => 'Bearer ' . $this->config->access_token,
                 ],
-                'query' => [
-                    'locationId' => $this->config->location_id,
-                    'status' => 'open',
-                ]
+                'query' => $query
             ]);
 
-            $response = response()->json($response->getBody());
-            $response->setStatusCode(200);
-            return $response;
+            $data = json_decode($response->getBody(), true);
+            return response()->json($data, 200);
 
         } catch (Exception $e) {
             if ($e->getCode() == 401) {
                 return response()->json(['error' => 'Unauthorized request'], 401);
             }
 
-            return response()->json(['error' => 'Request failed'], 500);
+            return response()->json(['error' => 'Request failed', 'message' => $e->getMessage(), 'code' => $e->getCode()], 500);
         }
     }
 }
